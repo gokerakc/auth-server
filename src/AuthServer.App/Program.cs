@@ -1,11 +1,11 @@
-using AuthServer.App.Data;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
+using AuthServer.App.Extensions;
+using Microsoft.AspNetCore.HttpOverrides;
 
 var builder = WebApplication.CreateBuilder(args);
 
 //
 // App settings configuration 
+//
 var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
 builder.Configuration
     .SetBasePath(Directory.GetCurrentDirectory())
@@ -20,6 +20,7 @@ if (string.IsNullOrEmpty(environment) || environment.ToLower() == "development")
 
 //
 // Web host configuration
+//
 var isDevelopment = string.IsNullOrEmpty(environment) || environment.ToLower() == "development";
 builder.WebHost.UseKestrel(opt =>
     {
@@ -35,20 +36,35 @@ builder.WebHost.UseKestrel(opt =>
     });
 
 //
-// Add services to the container.
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(connectionString));
-
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-    .AddEntityFrameworkStores<ApplicationDbContext>();
-
+// Add services to the container
+//
 builder.Services.AddControllersWithViews();
+
+builder.AddSqlServer();
+
+builder.AddAspNetCoreIdentity();
+
+builder.AddOpenIdDict();
+
 
 var app = builder.Build();
 
 //
 // Configure the HTTP request pipeline.
+//
+
+var forwardOptions = new ForwardedHeadersOptions
+{
+    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto |
+                       ForwardedHeaders.XForwardedHost,
+    RequireHeaderSymmetry = false
+};
+
+forwardOptions.KnownNetworks.Clear();
+forwardOptions.KnownProxies.Clear();
+
+app.UseForwardedHeaders(forwardOptions);
+
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
@@ -56,7 +72,8 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
+app.UsePathBase("/oauth");
+
 app.UseStaticFiles();
 
 app.UseRouting();
