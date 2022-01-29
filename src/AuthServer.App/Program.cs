@@ -47,7 +47,8 @@ builder.AddAspNetCoreIdentity();
 
 builder.AddOpenIdDict();
 
-builder.Services.AddHostedService<InitScopesService>();
+builder.Services.AddHostedService<SeedScopesService>();
+builder.Services.AddHostedService<SeedTestClientService>();
 
 var app = builder.Build();
 

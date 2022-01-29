@@ -2,12 +2,12 @@
 
 namespace AuthServer.App.Data.Seed;
 
-public class InitScopesService : IHostedService
+public class SeedScopesService : IHostedService
 {
     private readonly IServiceProvider _serviceProvider;
-    private readonly ILogger<InitScopesService> _logger;
+    private readonly ILogger<SeedScopesService> _logger;
 
-    public InitScopesService(IServiceProvider serviceProvider, ILogger<InitScopesService> logger)
+    public SeedScopesService(IServiceProvider serviceProvider, ILogger<SeedScopesService> logger)
     {
         _serviceProvider = serviceProvider;
         _logger = logger;
