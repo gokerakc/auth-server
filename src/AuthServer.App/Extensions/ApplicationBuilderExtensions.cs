@@ -1,8 +1,5 @@
 ﻿using System.Security.Cryptography.X509Certificates;
 using AuthServer.App.Data;
-using AuthServer.App.Models;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 
 namespace AuthServer.App.Extensions;
 
@@ -53,7 +50,7 @@ public static class ApplicationBuilderExtensions
                 }
 
                 // Register scopes (permissions)
-                options.RegisterScopes("test", "admin");
+                options.RegisterScopes(Constants.AllScopes);
 
                 options.RegisterClaims(new[] { "role", "email" });
 
@@ -63,36 +60,19 @@ public static class ApplicationBuilderExtensions
                     .DisableTransportSecurityRequirement()
                     .EnableTokenEndpointPassthrough()
                     .EnableAuthorizationEndpointPassthrough();
-            });
+            })
 
-        return builder;
-    }
-
-    public static WebApplicationBuilder AddSqlServer(this WebApplicationBuilder builder)
-    {
-        var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-        builder.Services.AddDbContext<ApplicationDbContext>(dbContextOptions =>
-        {
-            dbContextOptions.UseSqlServer(connectionString, sqlServerOptions =>
+            // Register the OpenIddict validation components.
+            .AddValidation(options =>
             {
-                sqlServerOptions.CommandTimeout(60);
-                sqlServerOptions.EnableRetryOnFailure();
+                // Import the configuration from the local OpenIddict server instance.
+                options.UseLocalServer();
+
+                // Register the ASP.NET Core host.
+                options.UseAspNetCore();
             });
-    
-    
-            // Register the entity sets needed by OpenIddict.
-            dbContextOptions.UseOpenIddict();
-        });
 
-        return builder;
-    }
 
-    public static WebApplicationBuilder AddAspNetCoreIdentity(this WebApplicationBuilder builder)
-    {
-        builder.Services.AddIdentity<ApplicationUser, IdentityRole>(opt => opt.SignIn.RequireConfirmedAccount = true)
-            .AddEntityFrameworkStores<ApplicationDbContext>()
-            .AddDefaultTokenProviders();
-        
         return builder;
     }
 }
