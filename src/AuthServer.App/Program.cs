@@ -1,3 +1,4 @@
+using AuthServer.App.Data.Seed;
 using AuthServer.App.Extensions;
 using Microsoft.AspNetCore.HttpOverrides;
 
@@ -46,6 +47,7 @@ builder.AddAspNetCoreIdentity();
 
 builder.AddOpenIdDict();
 
+builder.Services.AddHostedService<InitScopesService>();
 
 var app = builder.Build();
 
