@@ -1,0 +1,28 @@
+﻿@model AuthServer.App.ViewModels.LoginViewModel
+
+@{
+    Layout = "_Layout";
+}
+
+<img src="https://via.placeholder.com/120x100" class="logo" alt="Auth Server Logo">
+<h1>Auth Server single point login page</h1>
+<p>Please enter your username and password to access the requested content</p>
+
+<form asp-route="Login" method="post">
+    <input type="hidden" asp-for="ReturnUrl"/>
+    <fieldset>
+        <input asp-for="Username" placeholder="Your username" autofocus>
+        <input asp-for="Password" placeholder="Your password" type="password">
+        <button name="button" value="login">Get Access</button>
+    </fieldset>
+</form>
+@if (ViewContext.ModelState.IsValid == false)
+{
+    <div class="alert alert-danger">
+        <div asp-validation-summary="All" class="danger"></div>
+    </div>
+}
+else
+{
+    <p class="green">&nbsp;</p>
+}

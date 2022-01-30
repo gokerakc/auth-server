@@ -3,6 +3,7 @@ using AuthServer.App.Data;
 using AuthServer.App.Data.Seed;
 using AuthServer.App.Extensions;
 using AuthServer.App.Models;
+using AuthServer.App.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
@@ -84,6 +85,8 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(opt => opt.SignIn.Re
     .AddDefaultTokenProviders();
 
 builder.AddOpenIdDict();
+
+builder.Services.AddScoped<IUserService, UserService>();
 
 builder.Services.AddHostedService<SeedScopesService>();
 builder.Services.AddHostedService<SeedTestClientService>();
