@@ -87,6 +87,7 @@ builder.AddOpenIdDict();
 
 builder.Services.AddHostedService<SeedScopesService>();
 builder.Services.AddHostedService<SeedTestClientService>();
+builder.Services.AddHostedService<SeedRolesService>();
 
 var app = builder.Build();
 
