@@ -87,6 +87,7 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(opt => opt.SignIn.Re
 builder.AddOpenIdDict();
 
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IOpenIddictApplicationService, OpenIddictApplicationService>();
 
 builder.Services.AddHostedService<SeedScopesService>();
 builder.Services.AddHostedService<SeedTestClientService>();
