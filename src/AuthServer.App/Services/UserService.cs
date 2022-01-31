@@ -7,21 +7,33 @@ namespace AuthServer.App.Services;
 public class UserService : IUserService
 {
     private readonly UserManager<ApplicationUser> _userManager;
+    private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly ILogger<UserService> _logger;
 
     public UserService(
-        UserManager<ApplicationUser> userManager, ILogger<UserService> logger)
+        UserManager<ApplicationUser> userManager, 
+        SignInManager<ApplicationUser> signInManager,
+        ILogger<UserService> logger)
     {
         _userManager = userManager;
+        _signInManager = signInManager;
         _logger = logger;
     }
 
     public async Task<string> Login(HttpContext httpContext, LoginRequest loginRequest)
     {
-        var user = await _userManager.FindByEmailAsync(loginRequest.Username);
+        var user = await _userManager.FindByEmailAsync(loginRequest.Email);
         if (user == null)
         {
             _logger.LogInformation("User record does not exist");
+            return string.Empty;
+        }
+
+        var signInResult = await _signInManager.PasswordSignInAsync(user, loginRequest.Password, isPersistent: true, lockoutOnFailure: false);
+
+        if (signInResult.Succeeded == false)
+        {
+            _logger.LogInformation("Wrong password");
             return string.Empty;
         }
 
