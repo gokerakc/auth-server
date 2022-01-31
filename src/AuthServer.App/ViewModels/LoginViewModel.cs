@@ -4,8 +4,8 @@ namespace AuthServer.App.ViewModels;
 
 public class LoginViewModel
 {
-    [Required(ErrorMessage = "Please enter a valid username")]
-    public string Username { get; set; }
+    [Required(ErrorMessage = "Please enter a valid email")]
+    public string Email { get; set; }
     
     [Required(ErrorMessage = "Please enter a valid password")]
     public string Password { get; set; }
@@ -16,9 +16,9 @@ public class LoginViewModel
     {
     }
 
-    public LoginViewModel(string username, string password, string returnUrl)
+    public LoginViewModel(string email, string password, string returnUrl)
     {
-        Username = username;
+        Email = email;
         Password = password;
         ReturnUrl = returnUrl;
     }

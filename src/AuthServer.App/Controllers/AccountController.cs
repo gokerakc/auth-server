@@ -60,7 +60,8 @@ public class AccountController : Controller
 
             var loginRequest = new LoginRequest
             {
-                Username = model.Username,
+                Email = model.Email,
+                Password = model.Password,
                 RedirectUri = query.Get("redirect_uri"),
                 ClientId = query.Get("client_id"),
                 CodeChallenge = query.Get("code_challenge"),
@@ -72,7 +73,7 @@ public class AccountController : Controller
 
             var loginUrl = await _userService.Login(HttpContext, loginRequest);
 
-            return Redirect(loginUrl);
+            return string.IsNullOrEmpty(loginUrl) ? View(model) : Redirect(loginUrl);
         }
 
         return View(model);
