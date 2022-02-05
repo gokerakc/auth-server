@@ -2,7 +2,6 @@ using System.Web;
 using AuthServer.App.Models;
 using AuthServer.App.Services;
 using AuthServer.App.ViewModels;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -27,14 +26,14 @@ public class AccountController : Controller
 
     [HttpGet]
     [AllowAnonymous]
-    public async Task<IActionResult> Login(string returnUrl = "http://localhost:5000")
+    public async Task<IActionResult> Login(string? returnUrl)
     {
         var (token, userId) = GetCallbackParams(returnUrl);
         if (string.IsNullOrWhiteSpace(token) == false && string.IsNullOrWhiteSpace(userId) == false)
         {
             if (await ProcessLoginCallback(token, userId))
             {
-                Redirect(returnUrl);
+                Redirect(returnUrl!);
             }
             else
             {
@@ -73,7 +72,15 @@ public class AccountController : Controller
 
             var loginUrl = await _userService.Login(HttpContext, loginRequest);
 
-            return string.IsNullOrEmpty(loginUrl) ? View(model) : Redirect(loginUrl);
+            if (string.IsNullOrEmpty(loginUrl))
+            {
+                model.Email = null;
+                model.Password = null;
+
+                return View(model);
+            }
+
+            return string.IsNullOrEmpty(model.ReturnUrl) ? RedirectToAction("Login") : Redirect(loginUrl);
         }
 
         return View(model);
@@ -82,20 +89,22 @@ public class AccountController : Controller
     [HttpGet]
     public async Task<IActionResult> Logout()
     {
-        await HttpContext.SignOutAsync();
+        await _userService.Logout();
 
-        return View("Login");
+        return RedirectToAction("Login");
     }
 
-    private static Tuple<string, string> GetCallbackParams(string returnUrl)
+    private static Tuple<string?, string?> GetCallbackParams(string? returnUrl)
     {
+        if (returnUrl == null) return new Tuple<string?, string?>(null,  null);
+        
         var uri = new Uri(new Uri("http://localhost"), returnUrl);
         var query = HttpUtility.ParseQueryString(uri.Query);
 
         var token = query.Get("token");
         var userId = query.Get("us");
 
-        return new Tuple<string, string>(token, userId);
+        return new Tuple<string?, string?>(token, userId);
     }
 
     private async Task<bool> ProcessLoginCallback(string token, string userId)
