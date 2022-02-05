@@ -11,6 +11,8 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using OpenIddict.Validation.AspNetCore;
+using Serilog;
+using Serilog.Events;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -44,8 +46,15 @@ builder.WebHost.UseKestrel(opt =>
     .UseDefaultServiceProvider((context, options) =>
     {
         options.ValidateScopes = context.HostingEnvironment.IsDevelopment();
+    })
+    .UseSerilog((ctx, loggerConf) =>
+    {
+        loggerConf.WriteTo.Console(outputTemplate: "{Timestamp:o} [{Level:u3}] {SourceContext} {Message}{NewLine}{Exception}");
+        loggerConf.MinimumLevel.Information();
+        loggerConf.MinimumLevel.Override("Microsoft.EntityFrameworkCore.Database.Command", LogEventLevel.Warning);
     });
-
+        
+    
 //
 // Add services to the container
 //
