@@ -54,4 +54,9 @@ public class UserService : IUserService
 
         return $"{baseUrl}{queryParams}";
     }
+
+    public async Task Logout()
+    {
+        await _signInManager.SignOutAsync();
+    }
 }
