@@ -164,15 +164,13 @@ public class UserController : ControllerBase
     }
 
     private static AuthServerUser Map(ApplicationUser user, IList<string> roles) =>
-        new AuthServerUser
-        {
-            Id = new Guid(user.Id),
-            Email = user.Email,
-            Title = user.Title,
-            FirstName = user.FirstName,
-            LastName = user.LastName,
-            Roles = roles.Select(x => (UserRole)Enum.Parse(typeof(UserRole), x)).ToArray()
-        };
+        new AuthServerUser(
+            id: new Guid(user.Id),
+            email: user.Email,
+            title: user.Title ?? "",
+            firstName: user.FirstName ?? "",
+            lastName: user.LastName ?? "",
+            roles: roles.Select(x => (UserRole)Enum.Parse(typeof(UserRole), x)).ToArray());
 
     private static ApplicationUser Map(AuthServerUser user) =>
         new ApplicationUser

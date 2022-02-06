@@ -57,10 +57,8 @@ public class AccountController : Controller
             var uri = new Uri(new Uri("http://localhost"), model.ReturnUrl);
             var query = HttpUtility.ParseQueryString(uri.Query);
 
-            var loginRequest = new LoginRequest
+            var loginRequest = new LoginRequest(model.Email ?? string.Empty, model.Password ?? string.Empty)
             {
-                Email = model.Email,
-                Password = model.Password,
                 RedirectUri = query.Get("redirect_uri"),
                 ClientId = query.Get("client_id"),
                 CodeChallenge = query.Get("code_challenge"),

@@ -6,6 +6,22 @@ namespace AuthServer.App.Models;
 
 public class AuthServerClientRequest
 {
+    public AuthServerClientRequest(
+        string clientId,
+        string clientName,
+        string secret,
+        IList<AuthServerClientGrantType> allowedGrantTypes,
+        IList<string> allowedScopes,
+        IList<string> redirectUris)
+    {
+        ClientId = clientId;
+        ClientName = clientName;
+        Secret = secret;
+        AllowedGrantTypes = allowedGrantTypes;
+        AllowedScopes = allowedScopes;
+        RedirectUris = redirectUris;
+    }
+
     public string ClientId { get; set; }
 
     public string ClientName { get; set; }

@@ -6,12 +6,22 @@ namespace AuthServer.App.Models;
 
 public class AuthServerUser
 {
-    public Guid? Id { get; set; }
+    public AuthServerUser(Guid id, string email, string firstName, string lastName, string title, UserRole[] roles)
+    {
+        Id = id;
+        Email = email;
+        Roles = roles;
+        Title = title;
+        FirstName = firstName;
+        LastName = lastName;
+    }
+
+    public Guid Id { get; set; }
     
     [Required(ErrorMessage = "Password is required")]
     [StringLength(255, ErrorMessage = "Must be between 5 and 255 characters", MinimumLength = 5)]
     [DataType(DataType.Password)]
-    public string Password { get; set; }
+    public string? Password { get; set; }
 
     [Required]
     [EmailAddress]
