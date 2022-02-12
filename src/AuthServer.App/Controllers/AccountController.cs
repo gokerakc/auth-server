@@ -45,6 +45,7 @@ public class AccountController : Controller
         return View(viewModel);
     }
 
+    //TODO: Add email verification
     [HttpPost]
     [AllowAnonymous]
     [ValidateAntiForgeryToken]
@@ -88,6 +89,45 @@ public class AccountController : Controller
     public async Task<IActionResult> Logout()
     {
         await _userService.Logout();
+
+        return RedirectToAction("Login");
+    }
+    
+    [HttpGet]
+    [AllowAnonymous]
+    public Task<IActionResult> Register() =>Task.FromResult<IActionResult>(View());
+    
+    
+    [HttpPost]
+    [AllowAnonymous]
+    public async Task<IActionResult> Register(RegisterViewModel model)
+    {
+        if (ModelState.IsValid == false)
+        {
+            return View(model);
+        }
+
+        var applicationUser = new ApplicationUser
+        {
+            UserName = model.Email,
+            Email = model.Email,
+            FirstName = model.FirstName,
+            LastName = model.LastName
+        };
+        
+        var result = await _userManager.CreateAsync(applicationUser, model.Password);
+
+        if(!result.Succeeded)
+        {
+            foreach (var error in result.Errors)
+            {
+                ModelState.TryAddModelError(error.Code, error.Description);
+            }
+            return View(model);
+        }
+        await _userManager.AddToRoleAsync(applicationUser, UserRole.Visitor.ToString());
+        
+        await _userService.Login(HttpContext, new LoginRequest(model.Email, model.Password));
 
         return RedirectToAction("Login");
     }
