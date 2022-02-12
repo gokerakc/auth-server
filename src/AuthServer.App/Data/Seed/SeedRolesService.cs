@@ -19,7 +19,7 @@ public class SeedRolesService : IHostedService
         {
             var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
-            var roles = new string[] {UserRole.AdminUser.ToString(), UserRole.TestUser.ToString()};
+            var roles = new string[] {UserRole.AdminUser.ToString(), UserRole.TestUser.ToString(), UserRole.Visitor.ToString()};
 
             foreach (var role in roles)
             {
