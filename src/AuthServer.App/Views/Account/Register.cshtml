@@ -1,0 +1,85 @@
+﻿@model AuthServer.App.ViewModels.RegisterViewModel
+
+@{
+    Layout = "_Layout";
+}
+
+@{
+    if (User.Identity?.IsAuthenticated == false)
+    {
+        <div class="row">
+            <div class="col">
+            </div>
+            <div class="col-6">
+                
+                <img src="/img/lock.png" width="128" height="128" class="logo" alt="Auth Server Logo">
+                <h1>Single Sign-on App </h1>
+                <p>Please fill the form and submit to create a new account</p>
+                <form asp-route="Register" method="post">
+                    <fieldset>
+                        <div class="input-group input-group-sm mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="inputGroup-sizing-sm">FirstName</span>
+                            </div>
+                            <input type="text" class="form-control" aria-label="Small" asp-for="FirstName" placeholder="Name">
+                        </div>
+                        <div class="input-group input-group-sm mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="inputGroup-sizing-sm">LastName</span>
+                            </div>
+                            <input type="text" class="form-control" aria-label="Small" asp-for="LastName" placeholder="Last name">
+                        </div>
+                        <div class="input-group input-group-sm mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="inputGroup-sizing-sm">Email</span>
+                            </div>
+                            <input type="text" class="form-control" aria-label="Small" asp-for="Email" placeholder="example@email.com">
+                        </div>
+                        <div class="input-group input-group-sm mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="inputGroup-sizing-sm">Password</span>
+                            </div>
+                            <input type="password" class="form-control" aria-label="Small" asp-for="Password" placeholder="**********">
+                        </div>
+                        <div class="input-group input-group-sm mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="inputGroup-sizing-sm">Confirm your password</span>
+                            </div>
+                            <input type="password" class="form-control" aria-label="Small" asp-for="ConfirmPassword" placeholder="**********">
+                        </div>
+                        <button name="button" class="btn btn-primary" style="float: right" value="register">Register</button>
+                    </fieldset>
+                </form>
+            </div>
+            <div class="col">
+            </div>
+        </div>
+    }else
+    {
+        <div class="row">
+            <div class="col">
+            </div>
+            <div class="col-6">
+                <img src="/img/lock.png" width="128" height="128" class="logo" alt="Auth Server Logo">
+                <h1>Single Sign-on App </h1>
+
+                <p><b>Account:</b> @User.Identity?.Name</p>
+
+                <a class="btn btn-danger" asp-area="" asp-controller="Account" asp-action="Logout">Logout</a>
+            </div>
+            <div class="col">
+            </div>
+        </div>
+    }
+}
+
+@if (ViewContext.ModelState.IsValid == false)
+{
+    <div class="alert alert-danger">
+        <div asp-validation-summary="All" class="danger"></div>
+    </div>
+}
+else
+{
+    <p class="green">&nbsp;</p>
+}
