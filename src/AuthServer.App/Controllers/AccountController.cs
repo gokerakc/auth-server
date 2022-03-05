@@ -10,17 +10,19 @@ namespace AuthServer.App.Controllers;
 
 public class AccountController : Controller
 {
+    private readonly IUserService _userService;
     private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly UserManager<ApplicationUser> _userManager;
-    private readonly IUserService _userService;
+    private readonly IEmailService _emailService;
     private readonly ILogger<AccountController> _logger;
 
     public AccountController(IUserService userService, SignInManager<ApplicationUser> signInManager,
-        UserManager<ApplicationUser> userManager, ILogger<AccountController> logger)
+        UserManager<ApplicationUser> userManager, IEmailService emailService, ILogger<AccountController> logger)
     {
         _userService = userService;
         _signInManager = signInManager;
         _userManager = userManager;
+        _emailService = emailService;
         _logger = logger;
     }
 
@@ -45,7 +47,6 @@ public class AccountController : Controller
         return View(viewModel);
     }
 
-    //TODO: Add email verification
     [HttpPost]
     [AllowAnonymous]
     [ValidateAntiForgeryToken]
@@ -79,7 +80,7 @@ public class AccountController : Controller
                 return View(model);
             }
 
-            return string.IsNullOrEmpty(model.ReturnUrl) ? RedirectToAction("Login") : Redirect(loginUrl);
+            return string.IsNullOrEmpty(model.ReturnUrl) ? RedirectToAction(nameof(Login)) : Redirect(loginUrl);
         }
 
         return View(model);
@@ -90,7 +91,7 @@ public class AccountController : Controller
     {
         await _userService.Logout();
 
-        return RedirectToAction("Login");
+        return RedirectToAction(nameof(Login));
     }
     
     [HttpGet]
@@ -126,10 +127,36 @@ public class AccountController : Controller
             return View(model);
         }
         await _userManager.AddToRoleAsync(applicationUser, UserRole.Visitor.ToString());
-        
-        await _userService.Login(HttpContext, new LoginRequest(model.Email, model.Password));
 
-        return RedirectToAction("Login");
+        var token = await _userManager.GenerateEmailConfirmationTokenAsync(applicationUser);
+        var confirmationLink = Url.Action(nameof(ConfirmEmail), "Account", new { token, email = applicationUser.Email }, Request.Scheme);
+        
+        _emailService.SendVerificationEmail(confirmationLink!);
+        
+        return RedirectToAction(nameof(SuccessRegistration));
+    }
+    
+    [HttpGet]
+    public async Task<IActionResult> ConfirmEmail(string token, string email)
+    {
+        var user = await _userManager.FindByEmailAsync(email);
+        if (user == null)
+            return View("Error");
+        
+        var result = await _userManager.ConfirmEmailAsync(user, token);
+        return View(result.Succeeded ? nameof(ConfirmEmail) : nameof(Error));
+    }
+    
+    [HttpGet]
+    public IActionResult SuccessRegistration()
+    {
+        return View();
+    }
+    
+    [HttpGet]
+    public IActionResult Error()
+    {
+        return View();
     }
 
     private static Tuple<string?, string?> GetCallbackParams(string? returnUrl)

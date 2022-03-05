@@ -98,7 +98,11 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseOpenIddict();
 });
 
-builder.Services.AddIdentity<ApplicationUser, IdentityRole>(opt => opt.SignIn.RequireConfirmedAccount = false)
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>(opt =>
+    {
+        opt.SignIn.RequireConfirmedAccount = true;
+        opt.User.RequireUniqueEmail = true;
+    })
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
 
@@ -106,6 +110,7 @@ builder.AddOpenIdDict();
 
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IOpenIddictApplicationService, OpenIddictApplicationService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
 
 builder.Services.AddHostedService<SeedScopesService>();
 builder.Services.AddHostedService<SeedTestClientService>();
