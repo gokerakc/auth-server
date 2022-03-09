@@ -1,0 +1,17 @@
+﻿name: Build and Test Action
+
+on: [push]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup .NET 6
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 6.0.100
+      - name: Build application
+        run: cd src/AuthServer.App && dotnet build
+      - name: Run tests
+        run: cd test/AuthServer.Tests && dotnet test
