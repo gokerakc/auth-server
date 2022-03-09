@@ -4,9 +4,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{7C07582F-FC9
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{BF4A9B1C-5497-4C3D-856D-14B20B40A328}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthServer.Tests", "test\AuthServer.Tests\AuthServer.Tests.csproj", "{43455C42-B761-4034-AA36-357A17EED80F}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthServer.App", "src\AuthServer.App\AuthServer.App.csproj", "{A911335D-3045-425A-A2E0-B850F49F1E23}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthServer.Tests", "test\AuthServer.Tests\AuthServer.Tests.csproj", "{7D1F592A-1167-4039-8DE9-3AA9B11EAEB6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -14,17 +14,17 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{43455C42-B761-4034-AA36-357A17EED80F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{43455C42-B761-4034-AA36-357A17EED80F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{43455C42-B761-4034-AA36-357A17EED80F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{43455C42-B761-4034-AA36-357A17EED80F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A911335D-3045-425A-A2E0-B850F49F1E23}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A911335D-3045-425A-A2E0-B850F49F1E23}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A911335D-3045-425A-A2E0-B850F49F1E23}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A911335D-3045-425A-A2E0-B850F49F1E23}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7D1F592A-1167-4039-8DE9-3AA9B11EAEB6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7D1F592A-1167-4039-8DE9-3AA9B11EAEB6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7D1F592A-1167-4039-8DE9-3AA9B11EAEB6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7D1F592A-1167-4039-8DE9-3AA9B11EAEB6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{43455C42-B761-4034-AA36-357A17EED80F} = {BF4A9B1C-5497-4C3D-856D-14B20B40A328}
 		{A911335D-3045-425A-A2E0-B850F49F1E23} = {7C07582F-FC97-456A-8B0F-B41A901E1C9A}
+		{7D1F592A-1167-4039-8DE9-3AA9B11EAEB6} = {BF4A9B1C-5497-4C3D-856D-14B20B40A328}
 	EndGlobalSection
 EndGlobal
